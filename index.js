@@ -1,5 +1,6 @@
 const { createUser, userList, userListOrdered } = require('./db.js');
 const inquirer = require('inquirer');
+const Choice = require('inquirer/lib/objects/choice');
 
 const userQuestions = [
     {
@@ -22,14 +23,6 @@ const finishedQuestion = [
     },
 ];
 
-const listQuestion = [
-    {
-        type: 'confirm',
-        name: 'chooseOptionList',
-        message: 'Would you like a list of all the users?'
-    },
-];
-
 const listorderQuestion = [
     {
         type: 'confirm',
@@ -38,13 +31,14 @@ const listorderQuestion = [
     },
 ];
 
-const createQuestion = [
+const initialQuestions = [
     {
-        type: 'confirm',
-        name: 'chooseCreateUser',
-        message: 'Would you like to create a user?'
+        type: 'list',
+        name: 'initialChoices',
+        message: 'Would you like a list of users, or would you like to create a user?',
+        choices: ['List of users', 'Create a user']
     },
-];
+]
 
 const askUserQuestion = () => {
     inquirer.prompt(userQuestions).then(userAnswers => {
@@ -61,8 +55,8 @@ const askUserQuestion = () => {
 };
 
 (() => {
-    inquirer.prompt(listQuestion).then(async listAnswer => {
-        if (listAnswer.chooseOptionList) {
+    inquirer.prompt(initialQuestions).then(async listAnswer => {
+        if (listAnswer.initialChoices === 'List of users') {
             inquirer.prompt(listorderQuestion).then(async orderAnswer => {
                 if (orderAnswer.chooseListOrder) {
                     let listOfUsersAge = await userListOrdered();
@@ -75,14 +69,7 @@ const askUserQuestion = () => {
             });
         }
         else {
-            inquirer.prompt(createQuestion).then(createAnswer => {
-                if (createAnswer.chooseCreateUser) {
-                    askUserQuestion();
-                }
-                else {
-                    console.log('Have a great day!')
-                }
-            });
+            askUserQuestion();
         }
     });
 })();
