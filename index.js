@@ -35,7 +35,7 @@ const initialQuestions = [
     {
         type: 'list',
         name: 'initialChoices',
-        message: 'Would you like a list of users, or would you like to create a user?',
+        message: 'Would you like a list of users, or to create a user?',
         choices: ['List of users', 'Create a user']
     },
 ]
